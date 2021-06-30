@@ -19,10 +19,14 @@ import java.util.*;
 import static idk.plugin.npc.NPC.*;
 
 public class EntityDamageListener implements Listener {
+
+    public static String entName;
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         CompoundTag namedTag = entity.namedTag;
+        entName = entity.getName();
 
         if (namedTag.getBoolean("npc")) {
             event.setCancelled();

@@ -1,0 +1,70 @@
+package idk.plugin.npc.commands;
+
+
+import cn.nukkit.Player;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
+import cn.nukkit.utils.TextFormat;
+import idk.plugin.npc.Loader;
+import ru.nukkitx.forms.elements.SimpleForm;
+
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+
+
+public class SetTalk extends Command {
+
+    public SetTalk() {
+        super("settalk");
+        this.setDescription("Stores dialogue for later use.");
+    }
+
+    @Override
+    public boolean execute(CommandSender sender, String s, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(TextFormat.RED + "Cannot execute from the console.");
+            return false;
+        } else {
+            if (args.length > 0){
+            if (args[0].equalsIgnoreCase("view")) {
+
+                Hashtable<String, String> selects = Loader.setTalk;
+
+                selects.forEach((k, v) -> {
+                    v = (v + "\n");
+                    selects.replace(k,v);
+                });
+
+                Player p = ((Player) sender).getPlayer();
+                SimpleForm simpleForm = new SimpleForm("Stored Dialogue")
+                        .setContent(selects.toString());
+                simpleForm.send(p, (target, form, data) -> {
+                    if (data == -1) return; });
+                return true;
+            } }
+            int cancel;
+            JFrame f = new JFrame();
+            String diaName = JOptionPane.showInputDialog("Enter your dialogue title (no spaces).");
+            if (diaName == null) {return false;}
+            if (Loader.setTalk.containsKey(diaName)) {
+                cancel = JOptionPane.showConfirmDialog(null,
+                        "Dialogue already found. Overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION);
+                if (cancel == 1) {
+                    return false;
+                }}
+            String dialogue = JOptionPane.showInputDialog("Enter your dialogue.");
+            if (dialogue == null) {return false;}
+            try {
+                Loader.setTalk.put(diaName, dialogue);
+                JOptionPane.showMessageDialog(f, "Successfully stored.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return true;
+                }
+            }
+
+        }
+

@@ -34,6 +34,7 @@ public class NpcCommand extends Command {
                 });
         this.setPermission("npc.use");
     }
+
 /*
     public static void sendSetNPCSkinPacket(Entity npc, Player player, String username) { // The username is the name for the player that has the skin.
         removeNPCPacket(npc, player);
@@ -130,7 +131,7 @@ public class NpcCommand extends Command {
                     Skin nsStatic = new Skin();
                     BufferedImage skinFile = null;
                     String filePath;
-                    Skin oldSkin = new Skin ();
+                    Skin oldSkin = new Skin();
 
                     if (customSkin.length() < 1) {
                         int prots = ThreadLocalRandom.current().nextInt(0, 2); //TODO: Working?
