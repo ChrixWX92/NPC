@@ -20,14 +20,15 @@ public class Loader extends PluginBase {
 
     public static Loader plugin;
 
-    public String getPath() {
-        String PATH = "\\skins";
+    public String getPath(String folder) {
+        String PATH = ("\\" + folder);
         Path currentRelativePath = Paths.get("");
         String imgPath = currentRelativePath.toAbsolutePath().toString();
         return imgPath.concat(PATH);
     }
 
-    public File directory = new File(getPath());
+    public File skinsDirectory = new File(getPath("skins"));
+    public File talkDirectory = new File(getPath("dialogue"));
     public static Hashtable<String, String> setTalk = new Hashtable<>();
 
     @Override
@@ -38,11 +39,17 @@ public class Loader extends PluginBase {
         getServer().getConsoleSender().sendMessage(TextFormat.BLUE+"NPC plugin enabled");
 
 
-        if (! directory.exists()){
-            directory.mkdir();
-            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath() + " created for custom NPC skins.");
+        if (! skinsDirectory.exists()){
+            skinsDirectory.mkdir();
+            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath("skins") + " created for custom NPC skins.");
         }
         else {getServer().getConsoleSender().sendMessage(TextFormat.GREEN + "Skins folder found.");}
+
+        if (! talkDirectory.exists()){
+            talkDirectory.mkdir();
+            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath("dialogue") + " created for NPC dialogue CSVs.");
+        }
+        else {getServer().getConsoleSender().sendMessage(TextFormat.GREEN + "Dialogue folder found.");}
 
         if(pluginManager.getPlugin("FormAPI") == null) {
             getLogger().alert("§cRequired component not found (FormAPI Plugin)");

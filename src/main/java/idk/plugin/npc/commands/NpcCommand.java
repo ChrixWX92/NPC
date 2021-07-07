@@ -156,9 +156,9 @@ public class NpcCommand extends Command {
                         }
                     }
                     else {
-                        String nameError = new StringBuilder().append(TextFormat.RED + "No " + args[0] + "file found in " + Loader.plugin.directory.toString()).append(". Be sure to include the file extension when specifying a skin (e.g. 'Herobrine.png', rather than 'Herobrine''.)").toString();
+                        String nameError = new StringBuilder().append(TextFormat.RED + "No " + args[0] + "file found in " + Loader.plugin.skinsDirectory.toString()).append(". Be sure to include the file extension when specifying a skin (e.g. 'Herobrine.png', rather than 'Herobrine''.)").toString();
                         try {
-                            filePath = Loader.plugin.directory.toString().concat("\\").concat(customSkin);
+                            filePath = Loader.plugin.skinsDirectory.toString().concat("\\").concat(customSkin);
                             File skinPath = (new File(filePath));
                             if (skinPath.exists()) {skinFile = ImageIO.read(skinPath);}
                             else{sender.sendMessage(nameError);}
