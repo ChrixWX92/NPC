@@ -20,7 +20,7 @@ public class Loader extends PluginBase {
 
     public static Loader plugin;
 
-    public String getPath(String folder) {
+    public static String getPath(String folder) {
         String PATH = ("\\" + folder);
         Path currentRelativePath = Paths.get("");
         String imgPath = currentRelativePath.toAbsolutePath().toString();

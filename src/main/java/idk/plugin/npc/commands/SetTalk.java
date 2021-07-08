@@ -9,9 +9,11 @@ import idk.plugin.npc.Loader;
 import ru.nukkitx.forms.elements.SimpleForm;
 
 import javax.swing.*;
-import java.util.HashMap;
+//import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
+//import java.util.List;
+//import java.util.Map;
+
 
 
 public class SetTalk extends Command {
@@ -20,6 +22,7 @@ public class SetTalk extends Command {
         super("settalk");
         this.setDescription("Stores dialogue for later use.");
     }
+
 
     @Override
     public boolean execute(CommandSender sender, String s, String[] args) {
@@ -48,16 +51,29 @@ public class SetTalk extends Command {
             JFrame f = new JFrame();
             String diaName = JOptionPane.showInputDialog("Enter your dialogue title (no spaces).");
             if (diaName == null) {return false;}
-            if (Loader.setTalk.containsKey(diaName)) {
+            boolean overwrite = false;
+            if (UpdateCsv.findDialogue(diaName, ((Player) sender).getPlayer(), false) == "$AEE$") { // Loader.setTalk.containsKey(diaName)
                 cancel = JOptionPane.showConfirmDialog(null,
                         "Dialogue already found. Overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION);
                 if (cancel == 1) {
                     return false;
-                }}
+                }
+                else if (cancel == 0) {
+                    overwrite = true;
+                }
+            }
             String dialogue = JOptionPane.showInputDialog("Enter your dialogue.");
             if (dialogue == null) {return false;}
             try {
-                Loader.setTalk.put(diaName, dialogue);
+                // Loader.setTalk.put(diaName, dialogue);
+                if (overwrite) {
+                    if (!UpdateCsv.deleteDialogue(diaName, ((Player) sender).getPlayer())) {
+                        return false;
+                    }
+                }
+                if (!UpdateCsv.updateDialogue(diaName, dialogue, ((Player) sender).getPlayer())){
+                    return false;
+                }
                 JOptionPane.showMessageDialog(f, "Successfully stored.");
             } catch (Exception e) {
                 e.printStackTrace();
