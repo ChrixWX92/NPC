@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class UpdateCsv {
 
     public static String repDialogue;
+    public static String dkChange;
 
     /**
      *Add dialogue to the appropriate CSV.
@@ -27,9 +28,11 @@ public class UpdateCsv {
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
 
+            dkChange = diaKey.replaceAll("[ ,¬\n\r|]","");
+
             repDialogue = diaValue.replace(",","¬");
 
-            pw.println(diaKey+","+repDialogue);
+            pw.println(dkChange+","+repDialogue);
             pw.flush();
             pw.close();
             bw.close();

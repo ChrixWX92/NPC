@@ -49,7 +49,7 @@ public class SetTalk extends Command {
             } }
             int cancel;
             JFrame f = new JFrame();
-            String diaName = JOptionPane.showInputDialog("Enter your dialogue title (no spaces).");
+            String diaName = JOptionPane.showInputDialog("Enter your dialogue title.");
             if (diaName == null) {return false;}
             boolean overwrite = false;
             if (UpdateCsv.findDialogue(diaName, ((Player) sender).getPlayer(), false) == "$AEE$") { // Loader.setTalk.containsKey(diaName)
@@ -74,7 +74,7 @@ public class SetTalk extends Command {
                 if (!UpdateCsv.updateDialogue(diaName, dialogue, ((Player) sender).getPlayer())){
                     return false;
                 }
-                JOptionPane.showMessageDialog(f, "Successfully stored.");
+                JOptionPane.showMessageDialog(f, "Successfully stored under title:\n" + UpdateCsv.dkChange);
             } catch (Exception e) {
                 e.printStackTrace();
             }
