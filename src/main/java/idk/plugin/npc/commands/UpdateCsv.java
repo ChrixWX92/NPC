@@ -61,7 +61,7 @@ public class UpdateCsv {
         boolean rtn = give;
         String searchKey;
         String rtnDialogue = "";
-        String dk = diaKey;
+        String dk = diaKey.replaceAll("[ ,¬\n\r|]","");;
 
         try {
 
