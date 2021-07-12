@@ -55,11 +55,6 @@ public class Talk extends Command {
 
                 if (textFound) {talkText = UpdateCsv.findDialogue(args[0], p, true);}
                 String cleanText = talkText.replaceAll("\r", ""); // What an absolute nightmare this line was to troubleshoot!
-                sender.sendMessage(talkText);
-
-                StringSelection selection = new StringSelection(talkText);
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                clipboard.setContents(selection, selection);
 
                 SimpleForm simpleForm = new SimpleForm("§l§8" + entName)
                 .setContent("§f" + cleanText)
