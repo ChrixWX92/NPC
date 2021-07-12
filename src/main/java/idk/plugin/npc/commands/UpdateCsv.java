@@ -28,7 +28,7 @@ public class UpdateCsv {
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
 
-            dkChange = diaKey.replaceAll("[ ,¬\n\r|]","");
+            dkChange = diaKey.replaceAll("[ ,¬\n\r¦]","");
 
             repDialogue = diaValue.replace(",","¬");
 
@@ -61,7 +61,7 @@ public class UpdateCsv {
         boolean rtn = give;
         String searchKey;
         String rtnDialogue = "";
-        String dk = diaKey.replaceAll("[ ,¬\n\r|]","");;
+        String dk = diaKey.replaceAll("[ ,¬\n\r¦]","");;
 
         try {
 
@@ -89,7 +89,7 @@ public class UpdateCsv {
             if (found) {
                 String dV = rtnDialogue.replace("¬", ",");
                 String dVFlat = dV.replace("\n","");
-                String diaValue = dVFlat.replace("|", "\n");
+                String diaValue = dVFlat.replace("¦", "\n");
                 scanner.close();
                 return diaValue;
             } else {
