@@ -14,7 +14,10 @@ public abstract class EntityNPC extends Entity {
 
     public EntityNPC(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
-        this.setDataProperty(new FloatEntityData(Entity.DATA_BOUNDING_BOX_HEIGHT, map.getOrDefault(this.getNetworkId(), (float) 1)), true);
+       // this.setDataProperty(new FloatEntityData(54, map.getOrDefault(this.getNetworkId(), 1.0F)), true);
+        //this.setDataProperty(new FloatEntityData(53, map.getOrDefault(this.getNetworkId(), 1.0F)), true);
+        //this.setDataProperty(new FloatEntityData(54, 5), true);
+        //this.setDataProperty(new FloatEntityData(53, 5), true);
         this.setDataProperty(new FloatEntityData(DATA_SCALE, this.namedTag.getFloat("scale")));
     }
 

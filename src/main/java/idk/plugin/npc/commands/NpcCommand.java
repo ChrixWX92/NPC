@@ -7,22 +7,30 @@ import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.EntityHuman;
+import cn.nukkit.entity.data.EntityMetadata;
+import cn.nukkit.entity.data.FloatEntityData;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import idk.plugin.npc.Loader;
+import idk.plugin.npc.NPC;
 import io.netty.util.internal.ThreadLocalRandom;
 import ru.nukkitx.forms.elements.CustomForm;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static cn.nukkit.entity.Entity.DATA_BOUNDING_BOX_HEIGHT;
 import static idk.plugin.npc.NPC.*;
+import static idk.plugin.npc.listeners.entity.EntityDamageListener.entType;
 
 public class NpcCommand extends Command {
 
@@ -108,6 +116,7 @@ public class NpcCommand extends Command {
                         .addInput("§l§7Entity Name")
                         .addInput("§l§7Custom Skin")
                         .addSlider("Size",1,100,1,10)
+                        .addSlider("Bounding Box Divisor",0,1000,1,250)
                         .addToggle("§l§fRotаtion", true)
                         .addToggle("§l§fNametag visibilitу", true)
                         .addInput("§l§7Commands (Across ,)", "cmd1, cmd2, cmd3")
@@ -122,11 +131,12 @@ public class NpcCommand extends Command {
                     String entityName = (String) data.get(1);
                     String customSkin = (String) data.get(2);
                     Float scale = (Float) data.get(3);
-                    boolean isRotation = (Boolean) data.get(4);
-                    boolean visibleTag = (Boolean) data.get(5);
-                    String[] commands = ((String) data.get(6)).split(", ");
-                    boolean isPlayer = (Boolean) data.get(7);
-                    boolean hasUseItem = entityType.equals("Human") ? (Boolean) data.get(9) : false;
+                    Float bbm = (Float) data.get(4);
+                    boolean isRotation = (Boolean) data.get(5);
+                    boolean visibleTag = (Boolean) data.get(6);
+                    String[] commands = ((String) data.get(7)).split(", ");
+                    boolean isPlayer = (Boolean) data.get(8);
+                    boolean hasUseItem = entityType.equals("Human") ? (Boolean) data.get(10) : false;
 
                     Skin nsStatic = new Skin();
                     BufferedImage skinFile = null;
@@ -175,19 +185,30 @@ public class NpcCommand extends Command {
 
                         nsStatic = newSkin;
                     }
+                    CompoundTag compoundTag;
 
-
-                    CompoundTag compoundTag = nbt(player, entityType, commands, isPlayer, isRotation);
+                    if(entityType != "Human"){
+                        compoundTag = NPC.nbt(new Object[]{player, entityType, commands, isPlayer, isRotation});
+                    }
+                    else {
+                        compoundTag = nbt(player, entityType, commands, isPlayer, isRotation);
+                    }
 
                     Entity entity = Entity.createEntity(entityType + "NPC", player.chunk, compoundTag);
+
                     if (!entityName.replace(" ", "").equals("")) {
-                        entity.setNameTag(entityName);
+                        String trueEntityName = entityName.replace("¦", "\n");
+                        entity.setNameTag(trueEntityName);
                     }
+                    else {entity.setNameTag("");}
 
                     entity.setNameTagVisible(visibleTag);
                     entity.setNameTagAlwaysVisible(visibleTag);
 
                     entity.setScale((scale / 10));
+
+                    entity.setDataProperty(new FloatEntityData(54, (scale/(bbm/10))), true);
+                    entity.setDataProperty(new FloatEntityData(53, (scale/(bbm/10))), true);
 
                     if (entityType.equals("Human")) {
                         EntityHuman human = (EntityHuman) entity;
@@ -209,7 +230,9 @@ public class NpcCommand extends Command {
 
                     entity.spawnToAll();
 
-                    entity.recalculateBoundingBox();
+                    //if(entityType == "Human"){entity.recalculateBoundingBox();}
+                    if (entityType == "Human") {entity.recalculateBoundingBox();}
+
 
                 });
 

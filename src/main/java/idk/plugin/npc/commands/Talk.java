@@ -6,6 +6,7 @@ import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.utils.TextFormat;
 //import idk.plugin.npc.Loader;
+import idk.plugin.npc.listeners.entity.EntityDamageListener;
 import ru.nukkitx.forms.elements.SimpleForm;
 
 import java.awt.*;
@@ -13,6 +14,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
 import static idk.plugin.npc.listeners.entity.EntityDamageListener.entName;
+import static idk.plugin.npc.listeners.entity.EntityDamageListener.entType;
 
 public class Talk extends Command {
 
@@ -56,7 +58,14 @@ public class Talk extends Command {
                 if (textFound) {talkText = UpdateCsv.findDialogue(args[0], p, true);}
                 String cleanText = talkText.replaceAll("\r", ""); // What an absolute nightmare this line was to troubleshoot!
 
-                SimpleForm simpleForm = new SimpleForm("§l§8" + entName)
+                String titleName = entName;
+                String finalName = "";
+                if (titleName.contains("NPC")) {
+                titleName = (entName.replaceAll("NPC", ""));
+                finalName = titleName.replaceAll("(\\p{Ll})(\\p{Lu})","$1 $2");
+                titleName = finalName;}
+
+                SimpleForm simpleForm = new SimpleForm("§l§8" + titleName)
                 .setContent("§f" + cleanText)
                 .addButton("OK");
 

@@ -12,21 +12,28 @@ import cn.nukkit.event.entity.EntityDamageEvent;
 import cn.nukkit.inventory.PlayerInventory;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.StringTag;
+import idk.plugin.npc.Loader;
 import ru.nukkitx.forms.elements.*;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.*;
+import java.util.List;
 
 import static idk.plugin.npc.NPC.*;
 
 public class EntityDamageListener implements Listener {
 
     public static String entName;
+    public static String entType;
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onDamage(EntityDamageEvent event) {
         Entity entity = event.getEntity();
         CompoundTag namedTag = entity.namedTag;
         entName = entity.getName();
+        entType = entity.getClass().toString();
 
         if (namedTag.getBoolean("npc")) {
             event.setCancelled();
