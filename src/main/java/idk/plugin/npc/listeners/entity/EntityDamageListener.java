@@ -84,6 +84,7 @@ public class EntityDamageListener implements Listener {
     public void sendNPCEditingForm(Player player, Entity entity) {
         CompoundTag namedTag = entity.namedTag;
         SimpleForm simpleForm = new SimpleForm("§l§8NPC Editing", "\n§l§7NPC ID - " + entity.getId() + "\nNPC Name - \"" + entity.getName() + "\"\n\n")
+                .addButton("Change Name")
                 .addButton("Commands")
                 .addButton("Size")
                 .addButton("§cKill");
@@ -93,13 +94,16 @@ public class EntityDamageListener implements Listener {
 
         simpleForm.send(player, (target, form, data) -> {
             switch (data) {
-                case 0: //Commands
+                case 0: //Change Name
+                    this.sendChangeName(target, entity);
+                    break;
+                case 1: //Commands
                     this.sendCommands(target, entity);
                     break;
-                case 1: //Size
+                case 2: //Size
                     this.sendChangeSize(target, entity);
                     break;
-                case 2: //Kill
+                case 3: //Kill
                     new ModalForm("§l§8Delete a command")
                             .setButton1("§l§cYes")
                             .setButton2("§l§aNo")
@@ -113,7 +117,7 @@ public class EntityDamageListener implements Listener {
                                 this.sendNPCEditingForm(target1, entity);
                             });
                     break;
-                case 3: //Replace inventory
+                case 4: //Replace inventory
                     EntityHuman human = (EntityHuman) entity;
                     PlayerInventory playerInventory = player.getInventory();
                     PlayerInventory inventory = human.getInventory();
@@ -137,6 +141,26 @@ public class EntityDamageListener implements Listener {
                     break;
             }
         });
+    }
+
+    private void sendChangeName(Player player, Entity entity) {
+        new CustomForm("§l§8Change Name")
+                .addInput("")
+                .send(player, (target, form, data) -> {
+                    if (data == null) {
+                        this.sendNPCEditingForm(target, entity);
+                        return;
+                    }
+
+                    try {
+                        String name = data.get(0).toString();
+                        entity.setNameTag(name);
+                        entity.respawnToAll();
+                    } catch (Exception exception) {
+                        player.sendMessage("§cUnexpected error.");
+                        sendChangeName(target, entity);
+                    }
+                });
     }
 
     private void sendChangeSize(Player player, Entity entity) {
