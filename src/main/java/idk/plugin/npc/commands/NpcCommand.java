@@ -11,10 +11,13 @@ import cn.nukkit.entity.data.EntityMetadata;
 import cn.nukkit.entity.data.FloatEntityData;
 import cn.nukkit.entity.data.Skin;
 import cn.nukkit.inventory.PlayerInventory;
+import cn.nukkit.math.AxisAlignedBB;
+import cn.nukkit.metadata.MetadataValue;
 import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.utils.TextFormat;
 import idk.plugin.npc.Loader;
 import idk.plugin.npc.NPC;
+import idk.plugin.npc.entities.EntityNPC;
 import io.netty.util.internal.ThreadLocalRandom;
 import ru.nukkitx.forms.elements.CustomForm;
 
@@ -138,6 +141,8 @@ public class NpcCommand extends Command {
                     boolean isPlayer = (Boolean) data.get(8);
                     boolean hasUseItem = entityType.equals("Human") ? (Boolean) data.get(10) : false;
 
+                    EntityNPC.customBB = (scale/(bbm/10));
+
                     Skin nsStatic = new Skin();
                     BufferedImage skinFile = null;
                     String filePath;
@@ -233,6 +238,54 @@ public class NpcCommand extends Command {
                     //if(entityType == "Human"){entity.recalculateBoundingBox();}
                     if (entityType == "Human") {entity.recalculateBoundingBox();}
 
+                    //entity.setDataProperty(new FloatEntityData(54, (scale/(bbm/10))), true);
+                    //entity.setDataProperty(new FloatEntityData(53, (scale/(bbm/10))), true);
+
+                    Object o = (scale/(bbm/10));
+
+                    GsNpcMetadata mdv = new GsNpcMetadata(Loader.plugin,o);
+
+                    player.sendMessage(mdv.asString());
+
+                    entity.setMetadata("bb", mdv);
+
+                    entity.namedTag.putFloat("bb",(scale/(bbm/10)));
+
+                    /*Double miX = entity.boundingBox.getMinX();
+                    Double miY = entity.boundingBox.getMinY();
+                    Double miZ = entity.boundingBox.getMinZ();
+
+                    Double maX = entity.boundingBox.getMaxX();
+                    Double maY = entity.boundingBox.getMaxY();
+                    Double maZ = entity.boundingBox.getMaxZ();
+
+                    miX = (miX-bbm);
+                    miY = (miY-bbm);
+                    miZ = (miZ-bbm);
+                    maX = (maX+bbm);
+                    maY = (maY+bbm);
+                    maZ = (maZ+bbm);
+
+                    entity.boundingBox.setBounds(miX,miY,miZ,maX,maY,maZ);*/
+
+
+                    //entity.getBoundingBox()
+
+                    //entity.scheduleUpdate();
+                    //entity.setMetadata();
+
+
+
+                    //MetadataValue metaAdd = new MetadataValue();
+
+                    //entity.setMetadata(54,(scale/(bbm/10)));
+
+                    //entity.
+
+                    //entity.boundingBox.;
+
+                    //entity.getMetadata()
+                    //entity.setMetadata();
 
                 });
 

@@ -3,12 +3,18 @@ package idk.plugin.npc.entities;
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.data.FloatEntityData;
 import cn.nukkit.level.format.FullChunk;
+import cn.nukkit.metadata.MetadataValue;
 import cn.nukkit.nbt.tag.CompoundTag;
+import idk.plugin.npc.Loader;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.lang.Float.valueOf;
+
 public abstract class EntityNPC extends Entity {
+
+    public static float customBB;
 
     static Map<Integer, Float> map = new HashMap<>();
 
@@ -16,8 +22,23 @@ public abstract class EntityNPC extends Entity {
         super(chunk, nbt);
        // this.setDataProperty(new FloatEntityData(54, map.getOrDefault(this.getNetworkId(), 1.0F)), true);
         //this.setDataProperty(new FloatEntityData(53, map.getOrDefault(this.getNetworkId(), 1.0F)), true);
-        //this.setDataProperty(new FloatEntityData(54, 5), true);
-        //this.setDataProperty(new FloatEntityData(53, 5), true);
+
+        /*if (this.hasMetadata("bb")) {
+
+            MetadataValue nbb = this.getMetadata("bb").get(0);
+
+            Float nbbf = (Float) nbb.value();
+
+            Loader.plugin.getServer().broadcastMessage(this.getMetadata("bb").toString());
+            this.setDataProperty(new FloatEntityData(54, nbbf));
+            this.setDataProperty(new FloatEntityData(53, nbbf));
+        }*/
+
+        //this.setDataProperty(new FloatEntityData(54, 50));
+        //this.setDataProperty(new FloatEntityData(53, 50));
+
+        this.setDataProperty(new FloatEntityData(54, this.namedTag.getFloat("bb")));
+        this.setDataProperty(new FloatEntityData(53, this.namedTag.getFloat("bb")));
         this.setDataProperty(new FloatEntityData(DATA_SCALE, this.namedTag.getFloat("scale")));
     }
 
