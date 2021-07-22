@@ -16,7 +16,7 @@ public abstract class EntityNPC extends Entity {
 
     public static float customBB;
 
-    static Map<Integer, Float> map = new HashMap<>();
+    public static Map<Integer, Float> map = new HashMap<>();
 
     public EntityNPC(FullChunk chunk, CompoundTag nbt) {
         super(chunk, nbt);
