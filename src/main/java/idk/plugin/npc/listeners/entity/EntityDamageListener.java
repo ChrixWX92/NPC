@@ -200,6 +200,7 @@ public class EntityDamageListener implements Listener {
                 Integer sliderDef = Math.round((entity.namedTag.getFloat("bb"))*100);
 
                 new CustomForm("§l§8Change Bounding Box Size")
+                        .addLabel("§fCurrent: " + sliderDef)
                 .addSlider("",0,3000, 1, sliderDef)
                 .send(player, (target, form, data) -> {
                     if (data == null) {
@@ -208,7 +209,7 @@ public class EntityDamageListener implements Listener {
                     }
 
                     try {
-                        float bbSize = (Float) data.get(0);
+                        float bbSize = (Float) data.get(1);
                         entity.namedTag.putFloat("bb", (bbSize/100));
                         entity.setDataProperty(new FloatEntityData(54, (bbSize/100)),true);
                         entity.setDataProperty(new FloatEntityData(53, (bbSize/100)),true);

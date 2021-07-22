@@ -211,6 +211,7 @@ public class NpcCommand extends Command {
                     entity.setNameTagAlwaysVisible(visibleTag);
 
                     entity.setScale((scale / 10));
+                    entity.namedTag.putFloat("scale", ((scale / 10)));
 
                     entity.setDataProperty(new FloatEntityData(54, (scale/(bbm/10))), true);
                     entity.setDataProperty(new FloatEntityData(53, (scale/(bbm/10))), true);
