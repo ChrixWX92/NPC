@@ -23,7 +23,7 @@ public class UpdateCsv {
     public static boolean updateDialogue(String diaKey, String diaValue, Player user) {
         try{
             String worldName = user.level.getName();
-            String filepath = (Loader.getPath("dialogue") + "\\"+worldName+".csv");
+            File filepath = new File(Loader.getPath("dialogue"), worldName+".csv");
             FileWriter fw = new FileWriter(filepath, true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
@@ -66,9 +66,9 @@ public class UpdateCsv {
         try {
 
             String worldName = user.level.getName();
-            String filepath = (Loader.getPath("dialogue") + "\\" + worldName + ".csv");
+            File filepath = new File(Loader.getPath("dialogue"), worldName + ".csv");
 
-            Scanner scanner = new Scanner(new File(filepath));
+            Scanner scanner = new Scanner(filepath);
             scanner.useDelimiter("[,\n]");
 
             while (scanner.hasNext() && !found) {
@@ -125,21 +125,21 @@ public class UpdateCsv {
     public static boolean deleteDialogue(String diaKey, Player user)
     {
         String worldName = user.level.getName();
-        String filepath = (Loader.getPath("dialogue") + "\\" + worldName + ".csv");
+        File filepath = new File(Loader.getPath("dialogue"), worldName + ".csv");
         String searchKey;
         String rtnDialogue;
         String tbd = diaKey;
-        String tempFile = (Loader.getPath("dialogue") + "\\" + worldName + "temp.csv");
+        File tempFile = new File(Loader.getPath("dialogue"), worldName + "temp.csv");
 
-        File oldFile = new File(filepath);
-        File newFile = new File(tempFile);
+        File oldFile = filepath;
+        File newFile = tempFile;
 
         try
         {
             FileWriter fw = new FileWriter(tempFile,true);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
-            Scanner scanner = new Scanner(new File(filepath));
+            Scanner scanner = new Scanner(filepath);
             scanner.useDelimiter("[,\n]");
 
             while (scanner.hasNext())
@@ -159,7 +159,7 @@ public class UpdateCsv {
             bw.close();
             fw.close();
             oldFile.delete();
-            File dump = new File(filepath);
+            File dump = filepath;
             newFile.renameTo(dump);
 
             return true;

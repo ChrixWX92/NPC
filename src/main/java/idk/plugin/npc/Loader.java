@@ -20,20 +20,22 @@ public class Loader extends PluginBase {
 
     public static Loader plugin;
 
-    public static String getPath(String folder) {
-        String PATH = ("\\" + folder);
-        Path currentRelativePath = Paths.get("");
-        String imgPath = currentRelativePath.toAbsolutePath().toString();
-        return imgPath.concat(PATH);
+    public static File getPath(String folder) {
+        File folderDir = new File(plugin.getServer().getDataPath(), folder);
+        return folderDir;
     }
 
-    public File skinsDirectory = new File(getPath("skins"));
-    public File talkDirectory = new File(getPath("dialogue"));
+    public File skinsDirectory;
+    public File talkDirectory;
     public static Hashtable<String, String> setTalk = new Hashtable<>();
 
     @Override
     public void onEnable() {
         plugin = this;
+
+        skinsDirectory = getPath("skins");
+        talkDirectory = getPath("dialogue");
+
         NPC.registerEntity();
         PluginManager pluginManager = Server.getInstance().getPluginManager();
         getServer().getConsoleSender().sendMessage(TextFormat.BLUE+"NPC plugin enabled");
@@ -41,13 +43,13 @@ public class Loader extends PluginBase {
 
         if (! skinsDirectory.exists()){
             skinsDirectory.mkdir();
-            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath("skins") + " created for custom NPC skins.");
+            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath("skins").toString() + " created for custom NPC skins.");
         }
         else {getServer().getConsoleSender().sendMessage(TextFormat.GREEN + "Skins folder found.");}
 
         if (! talkDirectory.exists()){
             talkDirectory.mkdir();
-            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath("dialogue") + " created for NPC dialogue CSVs.");
+            getServer().getConsoleSender().sendMessage(TextFormat.GOLD + getPath("dialogue").toString() + " created for NPC dialogue CSVs.");
         }
         else {getServer().getConsoleSender().sendMessage(TextFormat.GREEN + "Dialogue folder found.");}
 
