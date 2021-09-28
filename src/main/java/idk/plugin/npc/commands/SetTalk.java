@@ -10,10 +10,10 @@ import ru.nukkitx.forms.elements.SimpleForm;
 
 import javax.swing.*;
 //import java.util.HashMap;
+import java.io.IOException;
 import java.util.Hashtable;
 //import java.util.List;
 //import java.util.Map;
-
 
 
 public class SetTalk extends Command {
@@ -29,30 +29,43 @@ public class SetTalk extends Command {
         if (!(sender instanceof Player)) {
             sender.sendMessage(TextFormat.RED + "Cannot execute from the console.");
             return false;
-        } else {
-            if (args.length > 0){
-            if (args[0].equalsIgnoreCase("view")) {
+        }
+        else {
+            if (args.length > 0) {
+                if (args[0].equalsIgnoreCase("view")) {
 
-                Hashtable<String, String> selects = Loader.setTalk;
+                    Hashtable<String, String> selects = Loader.setTalk;
 
-                selects.forEach((k, v) -> {
-                    v = (v + "\n");
-                    selects.replace(k,v);
-                });
+                    selects.forEach((k, v) -> {
+                        v = (v + "\n");
+                        selects.replace(k, v);
+                    });
 
-                Player p = ((Player) sender).getPlayer();
-                SimpleForm simpleForm = new SimpleForm("Stored Dialogue")
-                        .setContent(selects.toString());
-                simpleForm.send(p, (target, form, data) -> {
-                    if (data == -1) return; });
-                return true;
-            } }
+                    Player p = ((Player) sender).getPlayer();
+                    SimpleForm simpleForm = new SimpleForm("Stored Dialogue")
+                            .setContent(selects.toString());
+                    simpleForm.send(p, (target, form, data) -> {
+                        if (data == -1) return;
+                    });
+                    return true;
+                }
+            }
             int cancel;
             JFrame f = new JFrame();
             String diaName = JOptionPane.showInputDialog("Enter your dialogue title.");
             if (diaName == null) {return false;}
             boolean overwrite = false;
-            if (UpdateCsv.findDialogue(diaName, ((Player) sender).getPlayer(), false) == "$AEE$") { // Loader.setTalk.containsKey(diaName)
+            String text = null;
+
+            try {
+                text = UpdateCsv.findDialogue(diaName, ((Player) sender).getPlayer());
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            if (text != null && !text.isEmpty()) { // Loader.setTalk.containsKey(diaName)
                 cancel = JOptionPane.showConfirmDialog(null,
                         "Dialogue already found. Overwrite?", "Overwrite?", JOptionPane.YES_NO_OPTION);
                 if (cancel == 1) {
@@ -71,16 +84,17 @@ public class SetTalk extends Command {
                         return false;
                     }
                 }
-                if (!UpdateCsv.updateDialogue(diaName, dialogue, ((Player) sender).getPlayer())){
+                if (!UpdateCsv.updateDialogue(diaName, dialogue, ((Player) sender).getPlayer())) {
                     return false;
                 }
                 JOptionPane.showMessageDialog(f, "Successfully stored under title:\n" + UpdateCsv.dkChange);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
             return true;
-                }
-            }
-
         }
+    }
+
+}
 

@@ -5,12 +5,62 @@ import idk.plugin.npc.Loader;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class UpdateCsv {
 
     public static String repDialogue;
     public static String dkChange;
+
+    public static String cleanStr(String s) {
+        return s.replaceAll("[,¬\n\r¦]", "");
+    }
+
+    public static HashMap<String, String> loadDialogueFile(String filename) throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            HashMap<String, String> dlgs = new HashMap<>();
+            String line = br.readLine();
+
+            while (line != null) {
+                if (!line.isEmpty()) {
+                    String[] attrs = line.split(",");
+                    if (attrs.length == 2) {
+                        dlgs.put(cleanStr(attrs[0]), cleanStr(attrs[1]));
+                    }
+                }
+
+                line = br.readLine();
+            }
+
+            return dlgs;
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+            throw ioe;
+        }
+    }
+
+    public static void saveDialogueFile(String filename, HashMap<String, String> dlgs) {
+        try (FileWriter fw = new FileWriter(filename)) {
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            for (Map.Entry<String, String> entry : dlgs.entrySet()) {
+                pw.println(String.format("%s,%s", entry.getKey(), entry.getValue()));
+            }
+
+            bw.close();
+            pw.close();
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
 
     /**
      *Add dialogue to the appropriate CSV.
@@ -21,22 +71,13 @@ public class UpdateCsv {
      * @return Boolean - has it worked?
      */
     public static boolean updateDialogue(String diaKey, String diaValue, Player user) {
-        try{
+        try {
             String worldName = user.level.getName();
             File filepath = new File(Loader.getPath("dialogue"), worldName+".csv");
-            FileWriter fw = new FileWriter(filepath, true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter pw = new PrintWriter(bw);
+            HashMap<String, String> dlgs = loadDialogueFile(filepath.toString());
 
-            dkChange = diaKey.replaceAll("[ ,¬\n\r¦]","");
-
-            repDialogue = diaValue.replace(",","¬");
-
-            pw.println(dkChange+","+repDialogue);
-            pw.flush();
-            pw.close();
-            bw.close();
-            fw.close();
+            dlgs.put(cleanStr(diaKey), cleanStr(diaValue));
+            saveDialogueFile(filepath.toString(), dlgs);
 
             return true;
         }
@@ -55,64 +96,17 @@ public class UpdateCsv {
      * @param give True = Returns the text value associated with diaKey, False = Returns a keyword to confirm whether the entry exists or not
      * @return A string, either the dialogue found, or a keyword representing the search result, to be checked by Talk
      */
-    public static String findDialogue(String diaKey, Player user, boolean give) {
+    public static String findDialogue(String diaKey, Player user) throws IOException {
+        String dk = cleanStr(diaKey);
 
-        boolean found = false;
-        boolean rtn = give;
-        String searchKey;
-        String rtnDialogue = "";
-        String dk = diaKey.replaceAll("[ ,¬\n\r¦]","");;
+        String worldName = user.level.getName();
+        File filepath = new File(Loader.getPath("dialogue"), worldName + ".csv");
+        HashMap<String, String> dlgs = loadDialogueFile(filepath.toString());
 
-        try {
+        if (dlgs.containsKey(dk))
+            return dlgs.get(dk);
 
-            String worldName = user.level.getName();
-            File filepath = new File(Loader.getPath("dialogue"), worldName + ".csv");
-
-            Scanner scanner = new Scanner(filepath);
-            scanner.useDelimiter("[,\n]");
-
-            while (scanner.hasNext() && !found) {
-                searchKey = scanner.next();
-                rtnDialogue = scanner.next();
-
-                if (searchKey.equals(dk)) {
-                    found = true;
-                    if (!rtn)
-                    {
-                        String confirm = "$AEE$";
-                        scanner.close();
-                        return confirm;
-                    }
-                    }
-                }
-
-            if (found) {
-                String dV = rtnDialogue.replace("¬", ",");
-                String dVFlat = dV.replace("\n","");
-                String diaValue = dVFlat.replace("¦", "\n");
-                scanner.close();
-                return diaValue;
-            } else {
-                rtnDialogue = "*NO TEXT FOUND UNDER NAME \"" + dk + " \"*";
-                if (!rtn)
-                {
-                    String confirm = "$NEE$";
-                    scanner.close();
-                    return confirm;
-                }
-                return rtnDialogue;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            rtnDialogue = "*ERROR OCCURRED WHILE SEARCHING FOR TEXT WITH NAME \"" + dk + " \" PLEASE OVERWRITE THE ENTRY OR CHECK THE RELEVANT CSV*";
-            if (!rtn)
-            {
-                String confirm = "$EEE$";
-                return confirm;
-            }
-            return rtnDialogue;
-        }
+        return null;
     }
 
     /**
