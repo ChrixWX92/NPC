@@ -5,16 +5,12 @@ import idk.plugin.npc.Loader;
 
 import javax.swing.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 public class UpdateCsv {
 
-    public static String repDialogue;
     public static String dkChange;
 
     public static String cleanStr(String s) {
@@ -93,7 +89,6 @@ public class UpdateCsv {
      *
      * @param diaKey Talk text save name
      * @param user Player object to determine world name to append to the filepath
-     * @param give True = Returns the text value associated with diaKey, False = Returns a keyword to confirm whether the entry exists or not
      * @return A string, either the dialogue found, or a keyword representing the search result, to be checked by Talk
      */
     public static String findDialogue(String diaKey, Player user) throws IOException {
@@ -122,11 +117,7 @@ public class UpdateCsv {
         File filepath = new File(Loader.getPath("dialogue"), worldName + ".csv");
         String searchKey;
         String rtnDialogue;
-        String tbd = diaKey;
         File tempFile = new File(Loader.getPath("dialogue"), worldName + "temp.csv");
-
-        File oldFile = filepath;
-        File newFile = tempFile;
 
         try
         {
@@ -141,7 +132,7 @@ public class UpdateCsv {
                 searchKey = scanner.next();
                 rtnDialogue = scanner.next();
 
-                if (!searchKey.equals(tbd))
+                if (!searchKey.equals(diaKey))
                 {
                     pw.println(searchKey+","+rtnDialogue);
                 }
@@ -152,9 +143,8 @@ public class UpdateCsv {
             pw.close();
             bw.close();
             fw.close();
-            oldFile.delete();
-            File dump = filepath;
-            newFile.renameTo(dump);
+            filepath.delete();
+            tempFile.renameTo(filepath);
 
             return true;
 
