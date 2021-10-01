@@ -87,9 +87,9 @@ public class UpdateCsv {
                 }
 
             if (found) {
-                String dV = rtnDialogue.replace("¬", ",");
-                String dVFlat = dV.replace("\n","");
-                String diaValue = dVFlat.replace("¦", "\n");
+                String dV = rtnDialogue.replaceAll("¬", ",");
+                String dVFlat = dV.replaceAll("\n","");
+                String diaValue = dVFlat.replaceAll("¦", "\n");
                 scanner.close();
                 return diaValue;
             } else {
