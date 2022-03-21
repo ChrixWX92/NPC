@@ -1,4 +1,4 @@
-package idk.plugin.npc.commands;
+package idk.plugin.npc.dialogue;
 
 import cn.nukkit.Player;
 import idk.plugin.npc.Loader;
@@ -14,7 +14,7 @@ public class UpdateCsv {
     public static String dkChange;
 
     public static String cleanStr(String s) {
-        return s.replaceAll("[,¬\n\r¦]", "");
+        return s;//.replaceAll("[,¬\n\r¦]", "");
     }
 
     public static HashMap<String, String> loadDialogueFile(String filename) throws IOException {
